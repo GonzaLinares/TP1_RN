@@ -1,10 +1,24 @@
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib import pyplot as plt
-sns.set()
+import albumentations as A
 
 #classes = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
+
+def augmentData(train_X, train_y):
+    
+    #Buscar violinplot
+
+    transform = A.Compose([A.VerticalFlip(always_apply=True),
+                           A.HorizontalFlip(always_apply=True)])
+    transformed = []
+
+    transformed.append(transform(image=train_X))
+
+    augmentedX = np.concatenate([train_X, np.flip(transformed[0]["image"])])
+    augmentedy = np.concatenate([train_y, train_y])
+
+    return augmentedX, augmentedy 
 
 def initData():
 
@@ -61,3 +75,7 @@ def submit(model, test_X, y):
 
     predictions = model.predict(test_X)
     return predictions
+
+if __name__ == "__main__":
+
+    ...
