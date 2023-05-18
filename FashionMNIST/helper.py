@@ -61,7 +61,8 @@ def dataDistribution(plot):
                 axs[i][j].imshow(meanImg[5*i+j])
 
     elif plot == "intHist":
-        fig, axs = plt.subplots(2, 5)
+        fig, axs = plt.subplots(2, 5, figsize=(20,10))
+        fig.tight_layout(pad=2)
         meanImg = [train[labels.label.values == k].mean(axis=0).reshape(28,28) for k in range(10)]
         for i in range(2):
             for j in range(5):
