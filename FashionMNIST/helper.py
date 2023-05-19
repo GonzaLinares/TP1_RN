@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 import albumentations as A
+from tensorflow.keras.models import load_model
 
 def augmentData(train_X, train_y):
     
@@ -37,10 +38,13 @@ def initData():
 
     return train_X, test_X, train_y, test_y, train, test, labels, classes
 
-def submit(model, test_X, y):
+def submit(modelPath, test):
 
-    predictions = model.predict(test_X)
-    return predictions
+    model = load_model(modelPath, compile=False)
+    toSubmit = pd.DataFrame(columns=["id","Category"])
+    toSubmit["id"] = np.arange(len(test))
+    toSubmit["Category"] = np.argmax(model.predict(test), (1))
+    toSubmit.to_csv("./Submit/sub1.csv", index=False)
 
 if __name__ == "__main__":
 
