@@ -5,8 +5,6 @@ import albumentations as A
 from tensorflow.keras.models import load_model
 
 def augmentData(train_X, train_y):
-    
-    #Buscar violinplot
 
     transform = A.Compose([A.VerticalFlip(always_apply=True),
                            A.HorizontalFlip(always_apply=True)])
