@@ -3,6 +3,32 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import albumentations as A
 from tensorflow.keras.models import load_model
+import keras
+
+class PruningCallback(keras.callbacks.Callback):
+    def __init__(self, wp):
+        super(PruningCallback, self).__init__()
+        self.wp = wp
+
+    def on_train_batch_begin(self, epoch, logs=None):
+
+        curr_weights = self.model.get_weights()
+
+        for i in range(len(self.wp)):
+            zero_mask = np.where(self.wp[i] == 0.0)
+            curr_weights[i][zero_mask] = 0.0
+        
+        self.model.set_weights(curr_weights)
+
+    def on_train_batch_end(self, epoch, logs=None):
+
+        curr_weights = self.model.get_weights()
+
+        for i in range(len(self.wp)):
+            zero_mask = np.where(self.wp[i] == 0.0)
+            curr_weights[i][zero_mask] = 0.0
+        
+        self.model.set_weights(curr_weights)
 
 def augmentData(train_X, train_y):
 
@@ -15,7 +41,7 @@ def augmentData(train_X, train_y):
     augmentedX = np.concatenate([train_X, np.flip(transformed[0]["image"])])
     augmentedy = np.concatenate([train_y, train_y])
 
-    return augmentedX, augmentedy 
+    return augmentedX, augmentedy  
 
 def initData():
 
